@@ -32,21 +32,6 @@ export class Frame {
    * Closes the currently running iframe.
    */
   public close: () => void;
-  /**
-   * A parsed user agent for jsdom.
-   */
-  public agent = {
-    browser: {
-      major: JSDOM_VERSION.split(".")[0],
-      name: "jsdom",
-      version: JSDOM_VERSION
-    },
-    cpu: { architecture: undefined },
-    device: { vendor: undefined, model: undefined, type: undefined },
-    engine: { name: "WebKit", version: "537.36" },
-    os: { name: undefined, version: undefined },
-    ua: `Mozilla/5.0 (darwin) AppleWebKit/537.36 (KHTML, like Gecko) jsdom/${JSDOM_VERSION}`
-  };
 
   /**
    * Creates a new iframe from a JSDOM.

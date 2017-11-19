@@ -72,10 +72,9 @@ describe("My-Page", () => {
   Loads up an iframe like object.
 
 ```js
-load("http://google.com").then(({ window, document, agent }) => {
+load("http://google.com").then(({ window, document }) => {
   window; // The global window for the iframe
   document; // The document object for the iframe
-  agent; // A parsed useragent object using http://faisalman.github.io/ua-parser-js/
 })
 ```
 

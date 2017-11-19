@@ -1,5 +1,4 @@
 module.exports = exports = loadFrame;
-import * as parse from "ua-parser-js";
 export default loadFrame;
 
 /**
@@ -32,21 +31,6 @@ export class Frame {
    * Closes the currently running iframe.
    */
   public close: () => void;
-  /**
-   * A parsed user agent for jsdom.
-   */
-  public agent: {
-    browser: {
-      major: string,
-      name: string,
-      version: string
-    },
-    cpu: { architecture: string|void },
-    device: { vendor: string|void, model: string|void, type: string|void },
-    engine: { name: string|void, version: string|void },
-    os: { name: string|void, version: string|void },
-    ua: string
-  } = parse(window.navigator.userAgent)
 
   /**
    * Creates a new iframe from in the browser.
