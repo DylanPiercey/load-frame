@@ -1,12 +1,13 @@
-module.exports = exports = loadFrame;
-export default loadFrame;
-
 /**
  * Creates a new iframe at the provided url.
  *
  * @param url The url to load.
  */
-function loadFrame(url: string): Promise<Frame> {
+export function fromURL(url: string): Promise<Frame> {
+  if (!/^(https?|file|data):/.test(url)) {
+    throw new Error("Protocol should be http(s) or file.");
+  }
+
   const frame = document.createElement("iframe");
   frame.style.display = "none";
   frame.src = url;
@@ -16,6 +17,15 @@ function loadFrame(url: string): Promise<Frame> {
     frame.addEventListener("error", reject);
     document.body.appendChild(frame);
   }).then(() => new Frame(frame));
+}
+
+/**
+ * Creates a new iframe and inlines some html content.
+ *
+ * @param html The html to load into the iframe.
+ */
+export function fromHTML(html: string): Promise<Frame> {
+  return fromURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);
 }
 
 export class Frame {

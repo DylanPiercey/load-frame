@@ -54,7 +54,7 @@ const load = require("load-frame");
 describe("My-Page", () => {
   // Make sure your server is started already.
   let frame;
-  beforeEach(async () => frame = await load("http://localhost:8080"));
+  beforeEach(async () => frame = await load.fromURL("http://localhost:8080"));
   afterEach(() => frame.close());
 
   it("should load", () => {
@@ -67,12 +67,45 @@ describe("My-Page", () => {
 
 # API
 
-### load(url: string) => Promise<Frame>
+### #fromURL(url: string) => Promise<Frame>
 
-  Loads up an iframe like object.
+  Loads up an iframe like object from a url.
 
 ```js
-load("http://google.com").then(({ window, document }) => {
+// Load from a server.
+load.fromURL("http://google.com").then(({ window, document }) => {
+  window; // The global window for the iframe
+  document; // The document object for the iframe
+})
+
+// Load from a file.
+const filePath = path.join(__dirname, 'my-page.html')
+load.fromURL(`file://${filePath}`).then(({ window, document }) => {
+  window; // The global window for the iframe
+  document; // The document object for the iframe
+})
+```
+
+### #fromString(html: string) => Promise<Frame>
+
+  Loads up an iframe like object from a string of html.
+
+```js
+const html = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Example Title</title>
+  </head>
+  <body>
+    Example Content
+  </body>
+</html>
+`
+
+// Load from html string.
+load.fromString(html).then(({ window, document }) => {
   window; // The global window for the iframe
   document; // The document object for the iframe
 })

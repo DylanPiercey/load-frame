@@ -1,22 +1,40 @@
-module.exports = exports = loadFrame;
 import { readFileSync } from "fs";
 import { JSDOM } from "jsdom";
-export default loadFrame;
+import { parse } from "mini-url";
 
-const JSDOM_VERSION = JSON.parse(
-  readFileSync(require.resolve("jsdom/package"), "utf-8")
-).version;
+const JSDOM_OPTIONS = {
+  pretendToBeVisual: true,
+  resources: "usable",
+  runScripts: "dangerously"
+};
 
 /**
  * Creates a new iframe at the provided url.
  *
  * @param url The url to load.
  */
-function loadFrame(url: string): Promise<Frame> {
-  return JSDOM.fromURL(url, {
-    resources: "usable",
-    runScripts: "dangerously"
-  }).then(dom => new Frame(dom));
+export function fromURL(url: string): Promise<Frame> {
+  const { protocol, pathname } = parse(url);
+  const isFile = protocol === "file:";
+  const method = isFile ? "fromFile" : "fromURL";
+  const loadPath = isFile ? pathname : url;
+
+  if (!/(https?|file):/.test(protocol)) {
+    throw new Error("Protocol should be http(s) or file.");
+  }
+
+  return JSDOM[method](loadPath, JSDOM_OPTIONS).then(dom => new Frame(dom));
+}
+
+/**
+ * Creates a new iframe and inlines some html content.
+ *
+ * @param html The html to load into the iframe.
+ */
+export function fromHTML(html: string): Promise<Frame> {
+  return new Promise(resolve => {
+    resolve(new Frame(new JSDOM(html, JSDOM_OPTIONS)));
+  });
 }
 
 export class Frame {
